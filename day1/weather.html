@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Weather App</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+h1 {
+    color: #333;
+}
+#city {
+    padding: 10px;
+    margin: 10px 0;
+}
+#weather {
+    color: #666;
+}
+    </style>
+</head>
+<body>
+    <h1>พยากรณ์อากาศ</h1>
+    <input type="text" id="province" placeholder="กรุณาระบุจังหวัด">
+    <button id="getWeather">ตกลง</button>
+    <p id="weather"></p>
+    <script>
+    document.getElementById('getWeather').addEventListener('click', function() {
+        const token = 'YOUR_TOKEN';
+        let province = document.getElementById('province').value;
+        let now = new Date();
+        let y = now.getFullYear();
+        let m = (now.getMonth() + 1).toString().padStart(2, 0);
+        let d = now.getDate().toString().padStart(2, 0);
+        let h = now.getHours().toString().padStart(2, 0);
+        fetch(`https://data.tmd.go.th/nwpapi/v1/forecast/area/place?domain=2&province=${province}&starttime=${y}-${m}-${d}T${h}:00:00`, {
+            headers: {
+                "accept": "application/json",
+                "authorization": "Bearer " + token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            var weather = 'อุณหภูมิที่' + province + ' ' + data.WeatherForecasts[0].forecasts[0].data.tc + '°C.';
+            document.getElementById('weather').innerText = weather;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    <script>
+</body>
+</html>
